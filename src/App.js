@@ -10,6 +10,21 @@ export default function App() {
   const [leads, setLeads] = useState([]);
 
   const [callId, setCallId] = useState("");
+  const [history, setHistory] = useState([]);
+
+  const goTo = (nextStep) => {
+  setHistory((prev) => [...prev, step]);
+  setStep(nextStep);
+};
+
+const goBack = () => {
+  setHistory((prev) => {
+    const newHistory = [...prev];
+    const last = newHistory.pop();
+    if (last) setStep(last);
+    return newHistory;
+  });
+};
 
   // ================= DATA =================
   const updateData = (key, value) => {
@@ -17,10 +32,12 @@ export default function App() {
   };
 
   // ================= RESET =================
-  const reset = () => {
-    setStep("opening");
-    setData({});
-  };
+ const reset = () => {
+  setStep("opening");
+  setData({});
+  setCallId("");
+  setHistory([]); // 👈 added
+};
 
   // ================= LEAD ID =================
   const nextId = () => leads.length + 1;
@@ -31,6 +48,7 @@ export default function App() {
       id: nextId(),
       agent: agentName,
       data,
+      callId,
       timestamp: new Date().toISOString(),
     };
 
@@ -40,13 +58,13 @@ export default function App() {
   // ================= EXPORT CSV =================
   const exportCSV = () => {
     const rows = leads
-      .map(
-        (l) =>
-          `${l.id},${l.agent},${JSON.stringify(l.data).replaceAll(",", ";")}`
-      )
-      .join("\n");
+  .map(
+    (l) =>
+      `${l.id},${l.agent},${l.callId},${JSON.stringify(l.data).replaceAll(",", ";")}`
+  )
+  .join("\n");
 
-    const csv = "id,agent,data\n" + rows;
+    const csv = "id,agent,callId,data\n" + rows;
 
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -68,7 +86,11 @@ export default function App() {
       {/* LEFT SIDE */}
       <div style={{ width: "60%", padding: 20 }}>
         <h2>📞 Cold Calling CRM</h2>
-
+{history.length > 0 && step !== "agent" && (
+  <button onClick={goBack} style={{ marginBottom: 10 }}>
+    ⬅ Back
+  </button>
+)}
         {/* ================= AGENT ================= */}
         {step === "agent" && (
           <>
@@ -81,7 +103,7 @@ export default function App() {
 
             <button
               onClick={() => {
-                if (agentName) setStep("opening");
+                if (agentName) goTo("opening");
               }}
             >
               Start Call
@@ -93,7 +115,7 @@ export default function App() {
         {step === "opening" && (
           <>
             <p>Hi, am I speaking with [Name]?</p>
-            <button onClick={() => setStep("intro")}>Yes</button>
+            <button onClick={() => goTo("intro")}>Yes</button>
           </>
         )}
 
@@ -105,8 +127,8 @@ export default function App() {
               Are you the owner?
             </p>
 
-            <button onClick={() => setStep("owner_yes")}>Yes</button>
-            <button onClick={() => setStep("owner_no")}>No</button>
+            <button onClick={() => goTo("owner_yes")}>Yes</button>
+            <button onClick={() => goTo("owner_no")}>No</button>
           </>
         )}
 
@@ -117,8 +139,8 @@ export default function App() {
               I work with Prime Home Buyers, and I was calling to see if you’d be interested in a cash offer.
             </p>
 
-            <button onClick={() => setStep("permission")}>Yes</button>
-            <button onClick={() => setStep("future_3_6")}>No</button>
+            <button onClick={() => goTo("permission")}>Yes</button>
+            <button onClick={() => goTo("future_3_6")}>No</button>
           </>
         )}
 
@@ -129,8 +151,8 @@ export default function App() {
               Totally understand — how about in the next 3 to 6 months, would you consider selling?
             </p>
 
-            <button onClick={() => setStep("permission")}>Yes</button>
-            <button onClick={() => setStep("owner_no")}>No</button>
+            <button onClick={() => goTo("permission")}>Yes</button>
+            <button onClick={() => goTo("owner_no")}>No</button>
           </>
         )}
 
@@ -143,13 +165,14 @@ export default function App() {
               onClick={() => {
                 saveLead();
                 setData({});
-                setStep("condition");
+                setHistory([]);
+                goTo("condition");
               }}
             >
               Yes
             </button>
 
-            <button onClick={() => setStep("closing")}>No</button>
+            <button onClick={() => goTo("closing")}>No</button>
           </>
         )}
 
@@ -160,8 +183,8 @@ export default function App() {
               Since I’m calling on a recorded line, can I ask a couple of questions regarding the property’s condition?
             </p>
 
-            <button onClick={() => setStep("condition")}>Yes</button>
-            <button onClick={() => setStep("closing")}>No</button>
+            <button onClick={() => goTo("condition")}>Yes</button>
+            <button onClick={() => goTo("closing")}>No</button>
           </>
         )}
 
@@ -265,7 +288,7 @@ export default function App() {
 
   <br />
 
-  <button onClick={() => setStep("ownership_length")}>
+  <button onClick={() => goTo("ownership_length")}>
   Continue
 </button>
   </>
@@ -280,7 +303,7 @@ export default function App() {
       onChange={(e) => updateData("ownership_length", e.target.value)}
     />
 
-    <button onClick={() => setStep("occupancy")}>
+    <button onClick={() => goTo("occupancy")}>
       Continue
     </button>
   </>
@@ -290,9 +313,9 @@ export default function App() {
           <>
             <p>Do you currently live in it, is it vacant, or rented?</p>
 
-            <button onClick={() => setStep("listing")}>Owner Occupied</button>
-            <button onClick={() => setStep("listing")}>Vacant</button>
-            <button onClick={() => setStep("rented")}>Rented</button>
+            <button onClick={() => goTo("listing")}>Owner Occupied</button>
+            <button onClick={() => goTo("listing")}>Vacant</button>
+            <button onClick={() => goTo("rented")}>Rented</button>
           </>
         )}
       
@@ -302,8 +325,8 @@ export default function App() {
           <>
             <p>Month-to-month or yearly lease?</p>
 
-            <button onClick={() => setStep("listing")}>Month-to-Month</button>
-            <button onClick={() => setStep("listing")}>Yearly</button>
+            <button onClick={() => goTo("listing")}>Month-to-Month</button>
+            <button onClick={() => goTo("listing")}>Yearly</button>
           </>
         )}
 
@@ -312,24 +335,24 @@ export default function App() {
           <>
             <p>Is the property listed on the market?</p>
 
-            <button onClick={() => setStep("listing_details")}>Yes</button>
-            <button onClick={() => setStep("listing_history")}>No</button>
+            <button onClick={() => goTo("listing_details")}>Yes</button>
+            <button onClick={() => goTo("listing_history")}>No</button>
           </>
         )}
 
         {step === "listing_details" && (
           <>
             <p>By yourself or with a realtor?</p>
-            <button onClick={() => setStep("motivation")}>Realtor</button>
-            <button onClick={() => setStep("motivation")}>Self</button>
+            <button onClick={() => goTo("motivation")}>Realtor</button>
+            <button onClick={() => goTo("motivation")}>Self</button>
           </>
         )}
 
         {step === "listing_history" && (
           <>
             <p>Was it previously listed?</p>
-            <button onClick={() => setStep("motivation")}>Yes</button>
-            <button onClick={() => setStep("motivation")}>No</button>
+            <button onClick={() => goTo("motivation")}>Yes</button>
+            <button onClick={() => goTo("motivation")}>No</button>
           </>
         )}
 
@@ -338,7 +361,7 @@ export default function App() {
           <>
             <p>Aside from money, what made you consider selling?</p>
             <input onChange={(e) => updateData("motivation", e.target.value)} />
-            <button onClick={() => setStep("price")}>Continue</button>
+            <button onClick={() => goTo("price")}>Continue</button>
           </>
         )}
 
@@ -349,7 +372,7 @@ export default function App() {
               (write here market value)
             </p>
             <input onChange={(e) => updateData("estimated_value", e.target.value)} />
-            <button onClick={() => setStep("ballpark")}>Continue</button>
+            <button onClick={() => goTo("ballpark")}>Continue</button>
           </>
         )}
 
@@ -364,7 +387,7 @@ export default function App() {
 
             <p>💰 {lowOffer} – {highOffer}</p>
 
-            <button onClick={() => setStep("mortgage")}>Continue</button>
+            <button onClick={() => goTo("mortgage")}>Continue</button>
           </>
         )}
 
@@ -373,8 +396,8 @@ export default function App() {
   <>
     <p>Do you have any mortgage or lien on the property?</p>
 
-    <button onClick={() => setStep("mortgage_amount")}>Yes</button>
-    <button onClick={() => setStep("timeline")}>No</button>
+    <button onClick={() => goTo("mortgage_amount")}>Yes</button>
+    <button onClick={() => goTo("timeline")}>No</button>
   </>
 )}
 
@@ -388,7 +411,7 @@ export default function App() {
       onChange={(e) => updateData("mortgage_amount", e.target.value)}
     />
 
-    <button onClick={() => setStep("timeline")}>
+    <button onClick={() => goTo("timeline")}>
       Continue
     </button>
   </>
@@ -399,7 +422,7 @@ export default function App() {
           <>
             <p>When would you like to sell?</p>
             <input onChange={(e) => updateData("timeline", e.target.value)} />
-            <button onClick={() => setStep("confirm")}>Continue</button>
+            <button onClick={() => goTo("confirm")}>Continue</button>
           </>
         )}
 
@@ -417,8 +440,8 @@ export default function App() {
       within 2 business days. Will you be okay with that?
     </p>
 
-    <button onClick={() => setStep("callback_time")}>Yes</button>
-    <button onClick={() => setStep("upsell")}>No</button>
+    <button onClick={() => goTo("callback_time")}>Yes</button>
+    <button onClick={() => goTo("upsell")}>No</button>
   </>
 )}
 {/* ================= CALLBACK TIME ================= */}
@@ -440,7 +463,7 @@ export default function App() {
 
     <br /><br />
 
-    <button onClick={() => setStep("upsell")}>
+    <button onClick={() => goTo("upsell")}>
       Continue
     </button>
   </>
@@ -456,13 +479,14 @@ export default function App() {
               onClick={() => {
                 saveLead();
                 setData({});
-                setStep("condition");
+                 setHistory([]);
+                goTo("condition");
               }}
             >
               Yes
             </button>
 
-            <button onClick={() => setStep("email")}>No</button>
+            <button onClick={() => goTo("email")}>No</button>
           </>
         )}
 
@@ -476,7 +500,7 @@ export default function App() {
       onChange={(e) => updateData("email", e.target.value)}
     />
 
-    <button onClick={() => setStep("confirmation_block")}>
+    <button onClick={() => goTo("confirmation_block")}>
       Continue
     </button>
   </>
@@ -493,7 +517,7 @@ export default function App() {
 
           <button
   onClick={() => {
-    setStep("call_id");
+    goTo("call_id");
   }}
 >
               Confirm & Finish
@@ -518,7 +542,7 @@ export default function App() {
 
     saveLead(); // 👈 NOW it saves everything including call ID
 
-    setStep("done");
+    goTo("done");
   }}
 >
       Finish
