@@ -97,10 +97,12 @@ const goBack = () => {
             <h3>Enter Your Name</h3>
 
             <input
-              placeholder="Agent Name"
-              onChange={(e) => setAgentName(e.target.value)}
-                style={styles.input}
-            />
+  value={agentName}
+  placeholder="Agent Name"
+  onChange={(e) => setAgentName(e.target.value)}
+  style={styles.input}
+/>
+           
 
             <button
               style={styles.button}
