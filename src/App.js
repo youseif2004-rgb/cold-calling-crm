@@ -9,6 +9,8 @@ export default function App() {
   const [data, setData] = useState({});
   const [leads, setLeads] = useState([]);
 
+  const [callId, setCallId] = useState("");
+
   // ================= DATA =================
   const updateData = (key, value) => {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -489,16 +491,40 @@ export default function App() {
             <p>Your full name: {data.name || "[Name]"}</p>
             <p>Property address: {data.address || "[Full Address]"}</p>
 
-            <button
-              onClick={() => {
-                saveLead();
-                setStep("done");
-              }}
-            >
+          <button
+  onClick={() => {
+    setStep("call_id");
+  }}
+>
               Confirm & Finish
             </button>
           </>
         )}
+
+{/* ================= CALL ID ================= */}
+{step === "call_id" && (
+  <>
+    <h3>📞 Enter Call ID</h3>
+
+    <input
+      placeholder="Call ID"
+      value={callId}
+      onChange={(e) => setCallId(e.target.value)}
+    />
+
+    <button
+  onClick={() => {
+    updateData("call_id", callId);
+
+    saveLead(); // 👈 NOW it saves everything including call ID
+
+    setStep("done");
+  }}
+>
+      Finish
+    </button>
+  </>
+)}
 
         {/* ================= DONE ================= */}
         {step === "done" && (
