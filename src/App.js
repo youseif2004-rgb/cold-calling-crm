@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./App.css";
 
 export default function App() {
 
@@ -87,7 +88,7 @@ const goBack = () => {
      <div style={styles.left}>
         <h2>📞 Cold Calling CRM</h2>
 {history.length > 0 && step !== "agent" && (
-  <button onClick={goBack} style={{ marginBottom: 10 }}>
+  <button onClick={goBack} className="btn btn-back">
     ⬅ Back
   </button>
 )}
@@ -105,7 +106,7 @@ const goBack = () => {
            
 
             <button
-              style={styles.button}
+              className="btn btn-primary"
 onClick={() => {
                 if (agentName) goTo("opening");
               }}
@@ -120,7 +121,7 @@ onClick={() => {
   <div style={styles.stepBox}>
             <p>Hi, am I speaking with [Name]?</p>
             <button
-          style={styles.button}
+          className="btn btn-primary"
           onClick={() => goTo("intro")}>Yes</button>
           </div>
         )}
@@ -133,8 +134,8 @@ onClick={() => {
               Are you the owner?
             </p>
 
-            <button  onClick={() => goTo("owner_yes")}>Yes</button>
-            <button onClick={() => goTo("owner_no")}>No</button>
+            <button className="btn btn-primary" onClick={() => goTo("owner_yes")}>Yes</button>
+            <button className="btn btn-secondary" onClick={() => goTo("owner_no")}>No</button>
          </div>
         )}
 
@@ -145,8 +146,8 @@ onClick={() => {
               I work with Prime Home Buyers, and I was calling to see if you’d be interested in a cash offer.
             </p>
 
-            <button onClick={() => goTo("permission")}>Yes</button>
-            <button onClick={() => goTo("future_3_6")}>No</button>
+            <button className="btn btn-primary" onClick={() => goTo("permission")}>Yes</button>
+            <button className="btn btn-secondary" onClick={() => goTo("future_3_6")}>No</button>
         </div>
         )}
 
@@ -157,8 +158,8 @@ onClick={() => {
               Totally understand — how about in the next 3 to 6 months, would you consider selling?
             </p>
 
-            <button onClick={() => goTo("permission")}>Yes</button>
-            <button onClick={() => goTo("owner_no")}>No</button>
+            <button className="btn btn-primary" onClick={() => goTo("permission")}>Yes</button>
+            <button className="btn btn-secondary" onClick={() => goTo("owner_no")}>No</button>
          </div>
         )}
 
@@ -168,6 +169,7 @@ onClick={() => {
             <p>Do you own any other property you might be interested in selling?</p>
 
             <button
+              className="btn btn-primary"
               onClick={() => {
                 saveLead();
                 setData({});
@@ -178,7 +180,7 @@ onClick={() => {
               Yes
             </button>
 
-            <button onClick={() => goTo("closing")}>No</button>
+            <button className="btn btn-secondary" onClick={() => goTo("closing")}>No</button>
          </div>
         )}
 
@@ -189,8 +191,8 @@ onClick={() => {
               Since I’m calling on a recorded line, can I ask a couple of questions regarding the property’s condition?
             </p>
 
-            <button onClick={() => goTo("condition")}>Yes</button>
-            <button onClick={() => goTo("closing")}>No</button>
+            <button className="btn btn-primary" onClick={() => goTo("condition")}>Yes</button>
+            <button className="btn btn-secondary" onClick={() => goTo("closing")}>No</button>
           </div>
         )}
 
@@ -306,7 +308,7 @@ onClick={() => {
 
   <br />
 
-  <button onClick={() => goTo("ownership_length")}>
+  <button className="btn btn-primary" onClick={() => goTo("ownership_length")}>
   Continue
 </button>
   </div>
@@ -322,7 +324,7 @@ onClick={() => {
         style={styles.input}
     />
 
-    <button onClick={() => goTo("occupancy")}>
+    <button className="btn btn-primary" onClick={() => goTo("occupancy")}>
       Continue
     </button>
   </div>
@@ -332,9 +334,9 @@ onClick={() => {
          <div style={styles.stepBox}>
             <p>Do you currently live in it, is it vacant, or rented?</p>
 
-            <button onClick={() => goTo("listing")}>Owner Occupied</button>
-            <button onClick={() => goTo("listing")}>Vacant</button>
-            <button onClick={() => goTo("rented")}>Rented</button>
+            <button className="btn btn-secondary" onClick={() => goTo("listing")}>Owner Occupied</button>
+            <button className="btn btn-secondary" onClick={() => goTo("listing")}>Vacant</button>
+            <button className="btn btn-secondary" onClick={() => goTo("rented")}>Rented</button>
          </div>
         )}
       
@@ -344,8 +346,8 @@ onClick={() => {
              <div style={styles.stepBox}>
             <p>Month-to-month or yearly lease?</p>
 
-            <button onClick={() => goTo("listing")}>Month-to-Month</button>
-            <button onClick={() => goTo("listing")}>Yearly</button>
+            <button className="btn btn-secondary" onClick={() => goTo("listing")}>Month-to-Month</button>
+            <button className="btn btn-secondary" onClick={() => goTo("listing")}>Yearly</button>
           </div>
         )}
 
@@ -354,24 +356,24 @@ onClick={() => {
           <div style={styles.stepBox}>
             <p>Is the property listed on the market?</p>
 
-            <button onClick={() => goTo("listing_details")}>Yes</button>
-            <button onClick={() => goTo("listing_history")}>No</button>
+            <button className="btn btn-primary" onClick={() => goTo("listing_details")}>Yes</button>
+            <button className="btn btn-secondary" onClick={() => goTo("listing_history")}>No</button>
           </div>
         )}
 
         {step === "listing_details" && (
           <div style={styles.stepBox}>
             <p>By yourself or with a realtor?</p>
-            <button onClick={() => goTo("motivation")}>Realtor</button>
-            <button onClick={() => goTo("motivation")}>Self</button>
+            <button className="btn btn-secondary" onClick={() => goTo("motivation")}>Realtor</button>
+            <button className="btn btn-secondary" onClick={() => goTo("motivation")}>Self</button>
           </div>
         )}
 
         {step === "listing_history" && (
          <div style={styles.stepBox}>
             <p>Was it previously listed?</p>
-            <button onClick={() => goTo("motivation")}>Yes</button>
-            <button onClick={() => goTo("motivation")}>No</button>
+            <button className="btn btn-primary" onClick={() => goTo("motivation")}>Yes</button>
+            <button className="btn btn-secondary" onClick={() => goTo("motivation")}>No</button>
           </div>
         )}
 
@@ -380,7 +382,7 @@ onClick={() => {
           <div style={styles.stepBox}>
             <p>Aside from money, what made you consider selling?</p>
             <input onChange={(e) => updateData("motivation", e.target.value)} />
-            <button onClick={() => goTo("price")}>Continue</button>
+            <button className="btn btn-primary" onClick={() => goTo("price")}>Continue</button>
           </div>
         )}
 
@@ -391,7 +393,7 @@ onClick={() => {
               (write here market value)
             </p>
             <input onChange={(e) => updateData("estimated_value", e.target.value)} />
-            <button onClick={() => goTo("ballpark")}>Continue</button>
+            <button className="btn btn-primary" onClick={() => goTo("ballpark")}>Continue</button>
           </div>
         )}
 
@@ -406,7 +408,7 @@ onClick={() => {
 
             <p>💰 {lowOffer} – {highOffer}</p>
 
-            <button onClick={() => goTo("mortgage")}>Continue</button>
+            <button className="btn btn-primary" onClick={() => goTo("mortgage")}>Continue</button>
           </div>
         )}
 
@@ -415,8 +417,8 @@ onClick={() => {
  <div style={styles.stepBox}>
     <p>Do you have any mortgage or lien on the property?</p>
 
-    <button onClick={() => goTo("mortgage_amount")}>Yes</button>
-    <button onClick={() => goTo("timeline")}>No</button>
+    <button className="btn btn-primary" onClick={() => goTo("mortgage_amount")}>Yes</button>
+    <button className="btn btn-secondary" onClick={() => goTo("timeline")}>No</button>
    </div>
 )}
 
@@ -431,7 +433,7 @@ onClick={() => {
         style={styles.input}
     />
 
-    <button onClick={() => goTo("timeline")}>
+    <button className="btn btn-primary" onClick={() => goTo("timeline")}>
       Continue
     </button>
   </div>
@@ -442,7 +444,7 @@ onClick={() => {
           <div style={styles.stepBox}>
             <p>When would you like to sell?</p>
             <input onChange={(e) => updateData("timeline", e.target.value)} />
-            <button onClick={() => goTo("confirm")}>Continue</button>
+            <button className="btn btn-primary" onClick={() => goTo("confirm")}>Continue</button>
           </div>
         )}
 
@@ -460,8 +462,8 @@ onClick={() => {
       within 2 business days. Will you be okay with that?
     </p>
 
-    <button onClick={() => goTo("callback_time")}>Yes</button>
-    <button onClick={() => goTo("upsell")}>No</button>
+    <button className="btn btn-primary" onClick={() => goTo("callback_time")}>Yes</button>
+    <button className="btn btn-secondary" onClick={() => goTo("upsell")}>No</button>
  </div>
 )}
 {/* ================= CALLBACK TIME ================= */}
@@ -485,7 +487,7 @@ onClick={() => {
 
     <br /><br />
 
-    <button onClick={() => goTo("upsell")}>
+    <button className="btn btn-primary" onClick={() => goTo("upsell")}>
       Continue
     </button>
   </div>
@@ -498,6 +500,7 @@ onClick={() => {
             </p>
 
             <button
+              className="btn btn-primary"
               onClick={() => {
                 saveLead();
                 setData({});
@@ -508,7 +511,7 @@ onClick={() => {
               Yes
             </button>
 
-            <button onClick={() => goTo("email")}>No</button>
+            <button className="btn btn-secondary" onClick={() => goTo("email")}>No</button>
           </div>
         )}
 
@@ -523,7 +526,7 @@ onClick={() => {
         style={styles.input}
     />
 
-    <button onClick={() => goTo("confirmation_block")}>
+    <button className="btn btn-primary" onClick={() => goTo("confirmation_block")}>
       Continue
     </button>
   </div>
@@ -539,6 +542,7 @@ onClick={() => {
             <p>Property address: {data.address || "[Full Address]"}</p>
 
           <button
+            className="btn btn-primary"
   onClick={() => {
     goTo("call_id");
   }}
@@ -561,6 +565,7 @@ onClick={() => {
     />
 
     <button
+      className="btn btn-primary"
   onClick={() => {
     updateData("call_id", callId);
 
@@ -578,7 +583,7 @@ onClick={() => {
         {step === "done" && (
            <div style={styles.stepBox}>
             <h3>Thank you for your time!</h3>
-            <button onClick={reset}>New Call</button>
+            <button className="btn btn-secondary" onClick={reset}>New Call</button>
           </div>
         )}
 
@@ -586,7 +591,7 @@ onClick={() => {
         {step === "closing" && (
           <div style={styles.stepBox}>
             <p>Thank you for your time, have a great day!</p>
-            <button onClick={reset}>New Call</button>
+            <button className="btn btn-secondary" onClick={reset}>New Call</button>
           </div>
         )}
       </div>
@@ -595,7 +600,7 @@ onClick={() => {
       <div style={styles.right}>
         <h3>📊 Leads Dashboard</h3>
 
-        <button onClick={exportCSV}>Export CSV</button>
+        <button className="btn btn-secondary" onClick={exportCSV}>Export CSV</button>
 
         {leads.map((l) => (
   <div key={l.id} style={styles.card}>
